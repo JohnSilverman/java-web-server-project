@@ -104,6 +104,14 @@ public class SimpleHttpResponse implements HttpResponse{
             return response;
         }
 
+        public static HttpResponse response405(){
+            HttpResponse response = new SimpleHttpResponse();
+            response.status(405)
+                    .addHeader(new ResponseHeader("Content-Type", MIME.PLAIN_TEXT.toString()))
+                    .body(new PlainTextResponseBody("405 Method Not Allowed"));
+            return response;
+        }
+
         public static HttpResponse response422(){
             HttpResponse response = new SimpleHttpResponse();
             response.status(422)

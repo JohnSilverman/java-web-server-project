@@ -52,7 +52,7 @@ public class RequestHandler implements Runnable {
             try {
                 response = router.routeAndGetResponse(requestData);
             } catch (Exception e){
-                response = response500(e);
+                response = SimpleHttpResponse.Common.response500();
                 logger.error(e.getMessage());
                 e.printStackTrace();
             }
@@ -71,13 +71,4 @@ public class RequestHandler implements Runnable {
             logger.error(ee.getMessage());
         }
     }
-
-    private HttpResponse response500(Exception e){
-        HttpResponse response = new SimpleHttpResponse();
-        response.status(500)
-                .addHeader(new ResponseHeader("Content-Type", MIME.PLAIN_TEXT.toString()))
-                .body(new PlainTextResponseBody("500 Interval Server Error\n\n" + e.getMessage()));
-        return response;
-    }
-
 }
