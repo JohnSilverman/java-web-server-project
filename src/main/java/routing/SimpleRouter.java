@@ -50,17 +50,11 @@ public class SimpleRouter implements Router {
         }
 
         request = this.middleWareStack.processRequest(request);
-        return this.middleWareStack.processResponse(controller == null ? response404(request) : controller.getResponse(request));
+        return this.middleWareStack.processResponse(
+                controller == null ?
+                        SimpleHttpResponse.Common.response404()
+                        : controller.getResponse(request));
     }
 
-
-    // 실행될일 거의 없음. request handler에서 등록된 마지막 라우터가 \/.*를 매칭하는거라서
-    private HttpResponse response404(HttpRequest request){
-        HttpResponse response = new SimpleHttpResponse();
-        response.status(404)
-                .addHeader(new ResponseHeader("Content-Type",MIME.PLAIN_TEXT.toString()))
-                .body(new PlainTextResponseBody("404 {} Not Found".replace("{}",request.getPath())));
-        return response;
-    }
 
 }

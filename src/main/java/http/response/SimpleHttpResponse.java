@@ -1,5 +1,8 @@
 package http.response;
 
+import http.MIME;
+import http.request.HttpRequest;
+import http.response.responsebody.PlainTextResponseBody;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,6 +54,71 @@ public class SimpleHttpResponse implements HttpResponse{
         public String getMessage() { return this.message;}
         public int getStatusCode() {return this.statusCode;}
         public String toString(){ return String.valueOf(this.statusCode) + " " + this.message;}
+    }
+
+    public static class Common {
+        public static HttpResponse response200(){
+            HttpResponse response = new SimpleHttpResponse();
+            response.status(200)
+                    .addHeader(new ResponseHeader("Content-Type", MIME.PLAIN_TEXT.toString()))
+                    .body(new PlainTextResponseBody("200 OK"));
+            return response;
+        }
+
+        public static HttpResponse response301(){
+            HttpResponse response = new SimpleHttpResponse();
+            response.status(301)
+                    .addHeader(new ResponseHeader("Content-Type", MIME.PLAIN_TEXT.toString()))
+                    .body(new PlainTextResponseBody("301 Moved Permanently"));
+            return response;
+        }
+        public static HttpResponse response400(){
+            HttpResponse response = new SimpleHttpResponse();
+            response.status(400)
+                    .addHeader(new ResponseHeader("Content-Type", MIME.PLAIN_TEXT.toString()))
+                    .body(new PlainTextResponseBody("400 Bad Request"));
+            return response;
+        }
+
+        public static HttpResponse response401(){
+            HttpResponse response = new SimpleHttpResponse();
+            response.status(401)
+                    .addHeader(new ResponseHeader("Content-Type", MIME.PLAIN_TEXT.toString()))
+                    .body(new PlainTextResponseBody("401 Unauthorized"));
+            return response;
+        }
+
+        public static HttpResponse response403(){
+            HttpResponse response = new SimpleHttpResponse();
+            response.status(403)
+                    .addHeader(new ResponseHeader("Content-Type", MIME.PLAIN_TEXT.toString()))
+                    .body(new PlainTextResponseBody("403 Forbidden"));
+            return response;
+        }
+
+        public static HttpResponse response404(){
+            HttpResponse response = new SimpleHttpResponse();
+            response.status(404)
+                    .addHeader(new ResponseHeader("Content-Type", MIME.PLAIN_TEXT.toString()))
+                    .body(new PlainTextResponseBody("404 Not Found"));
+            return response;
+        }
+
+        public static HttpResponse response422(){
+            HttpResponse response = new SimpleHttpResponse();
+            response.status(422)
+                    .addHeader(new ResponseHeader("Content-Type", MIME.PLAIN_TEXT.toString()))
+                    .body(new PlainTextResponseBody("422 Unprocessable Entity"));
+            return response;
+        }
+
+        public static HttpResponse response500(){
+            HttpResponse response = new SimpleHttpResponse();
+            response.status(500)
+                    .addHeader(new ResponseHeader("Content-Type", MIME.PLAIN_TEXT.toString()))
+                    .body(new PlainTextResponseBody("500 Internal Server Error"));
+            return response;
+        }
     }
 
     @Override
