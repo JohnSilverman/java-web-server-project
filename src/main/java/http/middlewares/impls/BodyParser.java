@@ -6,6 +6,7 @@ import http.middlewares.MiddleWare;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
 import util.HttpStringUtil;
+import util.JsonConverter;
 
 import java.io.IOException;
 import java.util.Map;
@@ -25,19 +26,13 @@ public class BodyParser implements MiddleWare {
 
         if(request.getMethod().equals(HttpRequest.METHOD.GET) ||
         request.getMethod().equals(HttpRequest.METHOD.DELETE)) {
-            System.out.println("yeah");
             return request;
         }
-
 
         if(request.getHeader("Content-Type").equals(MIME.FORM.getMime())){
             map = HttpStringUtil.parseQueryString(request.getBody());
         } else if(request.getHeader("Content-Type").equals(MIME.JSON.getMime())){
-            try {
-                map = new ObjectMapper().readValue(request.getBody(), Map.class);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            map = JsonConverter.jsonStringToMap(request.getBody());
         } else return request; // json, form 아니면 그냥 통과
 
         request.put(KEY_BODY, map);

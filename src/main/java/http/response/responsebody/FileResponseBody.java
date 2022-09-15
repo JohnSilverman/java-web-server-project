@@ -40,7 +40,7 @@ public class FileResponseBody implements ResponseBody {
     public MIME getContentType() {
         String ext = HttpStringUtil.getExtension(this.file.getName());
         MIME mimeType = MIME.fromExtension(ext);
-        return mimeType != null ? mimeType : MIME.HTML;
+        return mimeType != null ? mimeType : MIME.OCTET_STREAM;
     }
 
 }
