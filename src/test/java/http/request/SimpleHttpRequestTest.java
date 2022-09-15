@@ -14,12 +14,12 @@ class SimpleHttpRequestTest {
     private final SimpleHttpRequest simpleHttpRequest = new SimpleHttpRequest(true);
 
 
-    @Test
-    void removePathPrefixTest(){
-        simpleHttpRequest.getHeaderMap().put(SimpleHttpRequest.KEY_PATH, "/abc/def");
-        simpleHttpRequest.removePathPrefix("/abc");
-        assertEquals("/def", simpleHttpRequest.getPath());
-    }
+//    @Test
+//    void removePathPrefixTest(){
+//        simpleHttpRequest.getHeaderMap().put(SimpleHttpRequest.KEY_PATH, "/abc/def");
+//        simpleHttpRequest.removePathPrefix("/abc");
+//        assertEquals("/def", simpleHttpRequest.getPath());
+//    }
 
     @Test
     void parseFirstLineOfHTTPRequest() {

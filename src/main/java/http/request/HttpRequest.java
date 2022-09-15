@@ -1,5 +1,6 @@
 package http.request;
 
+import java.util.List;
 import java.util.Map;
 
 public interface HttpRequest {
@@ -29,7 +30,8 @@ public interface HttpRequest {
     public Map<String,String> getHeaderMap();
     public METHOD getMethod();
     public String getPath();
-    public void removePathPrefix(String pathPrefix);
     public Map<String,String> getParamMap();
+    public String getParam(String name);
     public String getBody();
+
 }

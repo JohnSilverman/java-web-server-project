@@ -2,7 +2,6 @@ package util;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import util.HttpStringUtil;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -31,32 +30,5 @@ class HttpStringUtilTest {
         assertEquals("",testResult.get(3));
     }
 
-    @Test
-    void matchPathSuccessTest() {
-        String requestPath = "/user/123";
-        String pathPrefix = "/user/{id}";
-        Map<String,String> pathVariables = HttpStringUtil.matchPath(requestPath, pathPrefix);
-        assertNotNull(pathVariables);
-        assertEquals("123", pathVariables.get("id"));
-    }
 
-    @Test
-    @DisplayName("매칭되지 않는 경우 null을 잘 리턴하는지 체크합니다.")
-    void matchPathNotMatchTest() {
-        String requestPath = "/users/123";
-        String pathPrefix = "/user/{id}";
-        Map<String,String> pathVariables = HttpStringUtil.matchPath(requestPath, pathPrefix);
-        assertNull(pathVariables);
-    }
-
-    @Test
-    @DisplayName("복잡한 경우에도 path variables를 잘 리턴하는지 체크합니다.")
-    void matchPathComplex() {
-        String requestPath = "/user/5/age/young/comments";
-        String pathPrefix = "/user/{id}/age/{age}";
-        Map<String,String> pathVariables = HttpStringUtil.matchPath(requestPath, pathPrefix);
-        assertNotNull(pathVariables);
-        assertEquals("5", pathVariables.get("id"));
-        assertEquals("young", pathVariables.get("age"));
-    }
 }

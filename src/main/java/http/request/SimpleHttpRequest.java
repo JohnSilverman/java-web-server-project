@@ -43,21 +43,24 @@ public class SimpleHttpRequest implements HttpRequest {
     }
 
     @Override
-    public Map<String, String> getParamMap() {
-        return paramsMap;
+    public String getParam(String key) {
+        return paramsMap.get(key);
     }
+
+    @Override
+    public Map<String,String> getParamMap() { return paramsMap; }
 
     @Override
     public String getBody() {
         return body;
     }
 
-    @Override
-    public void removePathPrefix(String pathPrefix){
-        if(headerMap.get(KEY_PATH).startsWith(pathPrefix)){
-            headerMap.put(KEY_PATH, headerMap.get(KEY_PATH).substring(pathPrefix.length()));
-        }
-    }
+//    @Override
+//    public void removePathPrefix(String pathPrefix){
+//        if(headerMap.get(KEY_PATH).startsWith(pathPrefix)){
+//            headerMap.put(KEY_PATH, headerMap.get(KEY_PATH).substring(pathPrefix.length()));
+//        }
+//    }
 
     //첫 줄 파싱. 예시 : "GET /user?q=john&religion=atheism HTTP/1.1"
     public Map<String,String> parseFirstLineOfHTTPRequest(String firstLine){

@@ -36,13 +36,16 @@ public class RequestHandler implements Runnable {
             Router router = new SimpleRouter();
 
             // 컨트롤러 추가 (우선순위 순으로 추가하면 됨, 구체적인거 -> 일반적인거 순으로)
-            router.addController("/", StaticFilesController.getInstance());
+            router.addController("/{filePath}", StaticFilesController.getInstance());
 
+            // 응답 생성
             HttpResponse response;
             try {
                 response = router.routeAndGetResponse(requestData);
             } catch (Exception e){
                 response = response500(e);
+                logger.error(e.getMessage());
+                e.printStackTrace();
             }
 
             // 응답 전송

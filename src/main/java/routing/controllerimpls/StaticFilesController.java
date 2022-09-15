@@ -17,7 +17,7 @@ public class StaticFilesController implements Controller {
 
     @Override
     public HttpResponse getResponse(HttpRequest request) {
-        String filepath = request.getPath().equals("") ? "index.html" : request.getPath();
+        String filepath = request.getParam("filePath").equals("") ? "index.html" : request.getParam("filePath");
 
         HttpResponse httpResponse = new SimpleHttpResponse();
         httpResponse.status(200)

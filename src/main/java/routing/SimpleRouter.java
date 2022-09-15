@@ -8,8 +8,7 @@ import http.response.ResponseHeader;
 import http.response.responsebody.PlainTextResponseBody;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import util.HttpStringUtil;
-import webserver.RequestHandler;
+import util.URLMatcher;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,8 +20,8 @@ public class SimpleRouter implements Router {
     public Map<String, Controller> controllerMap = new HashMap<>();
 
     @Override
-    public void addController(String pathPrefix, Controller controller) {
-        controllerMap.put(pathPrefix, controller);
+    public void addController(String pathPattern, Controller controller) {
+        controllerMap.put(pathPattern, controller);
     }
 
     @Override
@@ -33,11 +32,10 @@ public class SimpleRouter implements Router {
         Controller controller = null;
         Map<String,String> pathVars = null;
 
-        for(String pathPrefix : this.controllerMap.keySet()){
-            pathVars = HttpStringUtil.matchPath(request.getPath(), pathPrefix);
+        for(String pathPattern : this.controllerMap.keySet()){
+            pathVars = URLMatcher.matchPath(request.getPath(), pathPattern);
             if(pathVars != null) {
-                controller = this.controllerMap.get(pathPrefix);
-                request.removePathPrefix(pathPrefix);
+                controller = this.controllerMap.get(pathPattern);
                 request.getParamMap().putAll(pathVars);
                 break;
             }

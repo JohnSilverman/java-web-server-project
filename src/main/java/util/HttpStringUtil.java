@@ -47,24 +47,4 @@ public final class HttpStringUtil {
         return lastDot != -1 ? fileName.substring(lastDot) : "";
     }
 
-
-    // /user/1 <-> /user/{id} 매치해서 {id:1} 해시맵 반환
-    public static Map<String,String> matchPath(String requestPath, String pathPrefix){
-        Map<String,String> pathVariables = new HashMap<>();
-
-        // 슬래시 기준으로 분리해서 리스트로 만들기
-        List<String> requestPathList = new ArrayList<>(Arrays.asList(requestPath.split("/")));
-        List<String> prefixList = new ArrayList<>(Arrays.asList(pathPrefix.split("/")));
-
-        // 하나씩 비교
-        for(int i = 0; i < prefixList.size(); i++){
-            String pathPrefixElement = prefixList.get(i);
-            String requestPathElement = requestPathList.get(i);
-            if(pathPrefixElement.equals(requestPathElement)) continue; // user <-> user 이렇게 딱 똑같으면 컨티뉴
-            else if( pathPrefixElement.charAt(0) == '{' && pathPrefixElement.charAt(pathPrefixElement.length()-1) == '}'){ // {id}같은 pathVariable 처리
-                pathVariables.put(pathPrefixElement.substring(1,pathPrefixElement.length()-1), requestPathElement);
-            } else return null; // 둘이 다르면 그냥 매치 안되는겨. null리턴!
-        }
-        return pathVariables;
-    }
 }
