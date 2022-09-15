@@ -2,7 +2,7 @@ package http.request;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import util.StringUtil;
+import util.HttpStringUtil;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -21,7 +21,11 @@ public class SimpleHttpRequest implements HttpRequest {
     private Map<String,String> paramsMap;
     private String body;
 
-    public SimpleHttpRequest(boolean testMode){} //테스트 전용
+    public SimpleHttpRequest(boolean testMode){
+        headerMap = new HashMap<>();
+        paramsMap = new HashMap<>();
+        body = new String();
+    } //테스트 전용
 
     @Override
     public Map<String, String> getHeaderMap() {
@@ -39,7 +43,7 @@ public class SimpleHttpRequest implements HttpRequest {
     }
 
     @Override
-    public Map<String, String> getParams() {
+    public Map<String, String> getParamMap() {
         return paramsMap;
     }
 
@@ -55,7 +59,7 @@ public class SimpleHttpRequest implements HttpRequest {
         String[] pathAndParams = methodParamsProtocol[1].split("\\?"); // split to path, params
 
         if(pathAndParams.length == 2){
-            paramsMap = StringUtil.parseQueryString(pathAndParams[1]);
+            paramsMap = HttpStringUtil.parseQueryString(pathAndParams[1]);
             for(String key : paramsMap.keySet()) result.put(key, paramsMap.get(key));
         }
 
@@ -113,7 +117,7 @@ public class SimpleHttpRequest implements HttpRequest {
     //문자열이 들어오는 InputStream 필요
     public SimpleHttpRequest(InputStream inputStream){
         try {
-            List<String> requestHeaderList = StringUtil.inputStreamToLines(inputStream);
+            List<String> requestHeaderList = HttpStringUtil.inputStreamToLines(inputStream);
             this.headerMap = parseHTTPRequest(requestHeaderList);
         } catch (Exception e){
             logger.error(e.getMessage());

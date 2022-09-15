@@ -1,4 +1,4 @@
-package http;
+package http.request;
 
 import http.request.HttpRequest;
 import http.request.SimpleHttpRequest;

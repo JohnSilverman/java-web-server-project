@@ -1,7 +1,8 @@
 package controller;
 
+import http.request.HttpRequest;
 import http.response.HttpResponse;
 
 public interface Controller {
-    public HttpResponse getResponse();
+    public HttpResponse getResponse(HttpRequest request);
 }
