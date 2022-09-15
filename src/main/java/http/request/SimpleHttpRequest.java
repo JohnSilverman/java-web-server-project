@@ -23,6 +23,31 @@ public class SimpleHttpRequest implements HttpRequest {
 
     public SimpleHttpRequest(boolean testMode){} //테스트 전용
 
+    @Override
+    public Map<String, String> getHeaderMap() {
+        return headerMap;
+    }
+
+    @Override
+    public METHOD getMethod() {
+        return METHOD.findMethodByValue(headerMap.get(KEY_METHOD));
+    }
+
+    @Override
+    public String getPath() {
+        return headerMap.get(KEY_PATH);
+    }
+
+    @Override
+    public Map<String, String> getParams() {
+        return paramsMap;
+    }
+
+    @Override
+    public String getBody() {
+        return body;
+    }
+
     //첫 줄 파싱. 예시 : "GET /user?q=john&religion=atheism HTTP/1.1"
     public Map<String,String> parseFirstLineOfHTTPRequest(String firstLine){
         Map<String,String> result = new HashMap<>();
@@ -94,30 +119,5 @@ public class SimpleHttpRequest implements HttpRequest {
             logger.error(e.getMessage());
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public Map<String, String> getHeaderMap() {
-        return headerMap;
-    }
-
-    @Override
-    public METHOD getMethod() {
-        return METHOD.findMethodByValue(headerMap.get(KEY_METHOD));
-    }
-
-    @Override
-    public String getPath() {
-        return headerMap.get(KEY_PATH);
-    }
-
-    @Override
-    public Map<String, String> getParams() {
-        return paramsMap;
-    }
-
-    @Override
-    public String getBody() {
-        return body;
     }
 }

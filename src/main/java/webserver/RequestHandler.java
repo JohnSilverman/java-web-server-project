@@ -5,10 +5,10 @@ import java.net.Socket;
 
 import http.request.HttpRequest;
 import http.request.SimpleHttpRequest;
-import http.response.BaseHTTPResponse;
+import http.response.SimpleHttpResponse;
 import http.response.HttpResponse;
 import http.response.ResponseHeader;
-import http.response.textresponse.FileResponseBody;
+import http.response.responsebody.FileResponseBody;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +34,7 @@ public class RequestHandler implements Runnable {
             FileResponseBody fileResponseBody = new FileResponseBody("webapp/" + path);
 
             // 응답 객체 만들기 (빌더 패턴 썼으면 더 좋았을까 하는 고민 살짝,,)
-            HttpResponse response = new BaseHTTPResponse()
+            HttpResponse response = new SimpleHttpResponse()
                     .status(200)
                     .addHeader(new ResponseHeader("Content-Type", "text/html;charset=utf-8"))
                     .body(fileResponseBody);
