@@ -6,13 +6,10 @@ import org.slf4j.LoggerFactory;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-public final class StringUtil {
-    private static final Logger logger = LoggerFactory.getLogger(StringUtil.class);
+public final class HttpStringUtil {
+    private static final Logger logger = LoggerFactory.getLogger(HttpStringUtil.class);
 
     // 인풋 스트림에서 문자열을 끝까지 읽어 하나의 string으로 반환합니다.
     public static List<String> inputStreamToLines(InputStream in){
@@ -47,5 +44,22 @@ public final class StringUtil {
 
     public static String getExtension(String fileName){
         return fileName.substring(fileName.lastIndexOf("."));
+    }
+
+
+    // /user/1 <-> /user/{id} 매치해서 {id:1} 해시맵 반환
+    public static Map<String,String> matchPath(String requestPath, String pathPrefix){
+        Map<String,String> pathVariables = new HashMap<>();
+        List<String> requestPathList = new ArrayList<>(Arrays.asList(requestPath.split("/")));
+        List<String> prefixList = new ArrayList<>(Arrays.asList(pathPrefix.split("/")));
+        for(int i = 0; i < prefixList.size(); i++){
+            String pathPrefixElement = prefixList.get(i);
+            String requestPathElement = requestPathList.get(i);
+            if(pathPrefixElement.equals(requestPathElement)) continue;
+            else if( pathPrefixElement.charAt(0) == '{' && pathPrefixElement.charAt(pathPrefixElement.length()-1) == '}'){
+                pathVariables.put(pathPrefixElement.substring(1,pathPrefixElement.length()-1), requestPathElement);
+            } else return null;
+        }
+        return pathVariables;
     }
 }
