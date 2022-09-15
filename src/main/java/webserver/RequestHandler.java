@@ -4,6 +4,7 @@ import java.io.*;
 import java.net.Socket;
 
 import http.MIME;
+import http.middlewares.RequestLogger;
 import http.request.HttpRequest;
 import http.request.SimpleHttpRequest;
 import http.response.HttpResponse;
@@ -26,14 +27,18 @@ public class RequestHandler implements Runnable {
     }
 
     public void run() {
-        logger.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(),
-                connection.getPort());
-
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             // 요청 패킷 파싱
             HttpRequest requestData = new SimpleHttpRequest(in);
 
+            // IP, PORT 정보 넘겨주기
+            requestData.put(HttpRequest.KEY_IP, connection.getInetAddress());
+            requestData.put(HttpRequest.KEY_PORT, connection.getPort());
+
             Router router = new SimpleRouter();
+
+            // 미들웨어 추가
+            router.addMiddleware(RequestLogger.getInstance());
 
             // 컨트롤러 추가 (우선순위 순으로 추가하면 됨, 구체적인거 -> 일반적인거 순으로)
             router.addController("/{filePath}", StaticFilesController.getInstance());
@@ -52,16 +57,13 @@ public class RequestHandler implements Runnable {
             response.send(out);
 
         } catch (IOException e) {
-            logger.info("run() error");
             logger.error(e.getMessage());
             e.printStackTrace();
         }
 
         try {
             connection.close();
-            logger.info("Connection closed");
         } catch(Exception ee){
-            logger.info("connection.close() error in run()");
             logger.error(ee.getMessage());
         }
     }

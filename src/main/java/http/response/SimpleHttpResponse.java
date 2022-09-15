@@ -6,7 +6,9 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SimpleHttpResponse implements HttpResponse{
     private static final Logger logger = LoggerFactory.getLogger(HttpResponse.class);
@@ -14,10 +16,12 @@ public class SimpleHttpResponse implements HttpResponse{
     private String statusLine = null;
     private List<ResponseHeader> headers;
     private ResponseBody body;
+    private Map<String,Object> additionalData;
 
     public SimpleHttpResponse() {
         this.statusLine = "";
         this.headers = new ArrayList<>();
+        this.additionalData = new HashMap<>();
     }
 
     private enum Status {
@@ -67,6 +71,16 @@ public class SimpleHttpResponse implements HttpResponse{
         this.addHeader( new ResponseHeader("Content-Length", String.valueOf(body.getContentLength())) );
         this.addHeader( new ResponseHeader("Content-Type", body.getContentType().toString()));
         return this;
+    }
+
+    @Override
+    public void put(String key, Object data) {
+        this.additionalData.put(key, data);
+    }
+
+    @Override
+    public Object get(String key) {
+        return this.additionalData.get(key);
     }
 
     private String headersToString(List<ResponseHeader> headersList){

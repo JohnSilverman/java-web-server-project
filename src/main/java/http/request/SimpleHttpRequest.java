@@ -19,6 +19,7 @@ public class SimpleHttpRequest implements HttpRequest {
     private static final Logger logger = LoggerFactory.getLogger(SimpleHttpRequest.class);
     private Map<String,String> headerMap;
     private Map<String,String> paramsMap;
+    private Map<String,Object> additionalData; // mostly used by middlewares
     private String body;
 
     public SimpleHttpRequest(boolean testMode){
@@ -26,6 +27,18 @@ public class SimpleHttpRequest implements HttpRequest {
         paramsMap = new HashMap<>();
         body = new String();
     } //테스트 전용
+
+    public SimpleHttpRequest(InputStream inputStream){
+        try {
+            List<String> requestHeaderList = HttpStringUtil.inputStreamToLines(inputStream);
+            this.headerMap = parseHTTPRequest(requestHeaderList);
+            this.paramsMap = new HashMap<>();
+            this.additionalData = new HashMap<>();
+        } catch (Exception e){
+            logger.error(e.getMessage());
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public Map<String, String> getHeaderMap() {
@@ -53,6 +66,15 @@ public class SimpleHttpRequest implements HttpRequest {
     @Override
     public String getBody() {
         return body;
+    }
+    @Override
+    public void put(String key, Object data) {
+        this.additionalData.put(key, data);
+    }
+
+    @Override
+    public Object get(String key) {
+        return this.additionalData.get(key);
     }
 
 //    @Override
@@ -122,17 +144,5 @@ public class SimpleHttpRequest implements HttpRequest {
             this.body = body;
         }
         return result;
-    }
-
-    //문자열이 들어오는 InputStream 필요
-    public SimpleHttpRequest(InputStream inputStream){
-        try {
-            List<String> requestHeaderList = HttpStringUtil.inputStreamToLines(inputStream);
-            this.headerMap = parseHTTPRequest(requestHeaderList);
-            this.paramsMap = new HashMap<>();
-        } catch (Exception e){
-            logger.error(e.getMessage());
-            e.printStackTrace();
-        }
     }
 }
