@@ -25,10 +25,12 @@ public class SimpleHttpResponse implements HttpResponse{
         this.statusLine = "";
         this.headers = new ArrayList<>();
         this.additionalData = new HashMap<>();
+        this.body = null;
     }
 
     private enum Status {
         OK(200,"OK"),
+        FOUND(302,"302 Found"),
         BAD_REQUEST(400,"Bad Request"),
         UNAUTHORIZED(401, "Unauthorized"),
         FORBIDDEN(403,"Forbidden"),
@@ -56,77 +58,20 @@ public class SimpleHttpResponse implements HttpResponse{
         public String toString(){ return String.valueOf(this.statusCode) + " " + this.message;}
     }
 
-    public static class Common {
-        public static HttpResponse response200(){
-            HttpResponse response = new SimpleHttpResponse();
-            response.status(200)
-                    .addHeader(new ResponseHeader("Content-Type", MIME.PLAIN_TEXT.toString()))
-                    .body(new PlainTextResponseBody("200 OK"));
-            return response;
-        }
+    public static HttpResponse simpleResponse(int statusCode){
+        HttpResponse response = new SimpleHttpResponse();
+        response.status(statusCode)
+                .addHeader(new ResponseHeader("Content-Type", MIME.HTML.toString()))
+                .body(new PlainTextResponseBody(statusCode + " " + Status.of(statusCode).getMessage()));
+        return response;
+    }
 
-        public static HttpResponse response301(){
-            HttpResponse response = new SimpleHttpResponse();
-            response.status(301)
-                    .addHeader(new ResponseHeader("Content-Type", MIME.PLAIN_TEXT.toString()))
-                    .body(new PlainTextResponseBody("301 Moved Permanently"));
-            return response;
-        }
-        public static HttpResponse response400(){
-            HttpResponse response = new SimpleHttpResponse();
-            response.status(400)
-                    .addHeader(new ResponseHeader("Content-Type", MIME.PLAIN_TEXT.toString()))
-                    .body(new PlainTextResponseBody("400 Bad Request"));
-            return response;
-        }
-
-        public static HttpResponse response401(){
-            HttpResponse response = new SimpleHttpResponse();
-            response.status(401)
-                    .addHeader(new ResponseHeader("Content-Type", MIME.PLAIN_TEXT.toString()))
-                    .body(new PlainTextResponseBody("401 Unauthorized"));
-            return response;
-        }
-
-        public static HttpResponse response403(){
-            HttpResponse response = new SimpleHttpResponse();
-            response.status(403)
-                    .addHeader(new ResponseHeader("Content-Type", MIME.PLAIN_TEXT.toString()))
-                    .body(new PlainTextResponseBody("403 Forbidden"));
-            return response;
-        }
-
-        public static HttpResponse response404(){
-            HttpResponse response = new SimpleHttpResponse();
-            response.status(404)
-                    .addHeader(new ResponseHeader("Content-Type", MIME.PLAIN_TEXT.toString()))
-                    .body(new PlainTextResponseBody("404 Not Found"));
-            return response;
-        }
-
-        public static HttpResponse response405(){
-            HttpResponse response = new SimpleHttpResponse();
-            response.status(405)
-                    .addHeader(new ResponseHeader("Content-Type", MIME.PLAIN_TEXT.toString()))
-                    .body(new PlainTextResponseBody("405 Method Not Allowed"));
-            return response;
-        }
-
-        public static HttpResponse response422(){
-            HttpResponse response = new SimpleHttpResponse();
-            response.status(422)
-                    .addHeader(new ResponseHeader("Content-Type", MIME.PLAIN_TEXT.toString()))
-                    .body(new PlainTextResponseBody("422 Unprocessable Entity"));
-            return response;
-        }
-
-        public static HttpResponse response500(){
-            HttpResponse response = new SimpleHttpResponse();
-            response.status(500)
-                    .addHeader(new ResponseHeader("Content-Type", MIME.PLAIN_TEXT.toString()))
-                    .body(new PlainTextResponseBody("500 Internal Server Error"));
-            return response;
-        }
+    public static HttpResponse redirect(String location){
+        HttpResponse response = new SimpleHttpResponse();
+        response.status(302)
+                .addHeader(new ResponseHeader("Location", location))
+                .body(new PlainTextResponseBody(Status.of(302).getMessage()));
+        return response;
     }
 
     @Override
@@ -172,7 +117,7 @@ public class SimpleHttpResponse implements HttpResponse{
         try {
             if( !this.statusLine.equals("") ){ os.write((this.statusLine + "\r\n").getBytes()); }
             if( headers.size() != 0) { os.write( (headersToString(this.headers) + "\r\n").getBytes() ); }
-            if( this.body.getInputStream() != null ) {this.body.getInputStream().transferTo(os); }
+            if( this.body != null && this.body.getInputStream() != null ) {this.body.getInputStream().transferTo(os); }
         } catch(IOException e){
             logger.error(e.getMessage());
             e.printStackTrace();

@@ -17,9 +17,6 @@ public class FileResponseBody implements ResponseBody {
 
     public FileResponseBody(String filePath){
         this.file = new File(filePath);
-        if(!file.exists()){
-            throw new RuntimeException("File does not exist");
-        }
     }
 
     @Override
