@@ -34,18 +34,18 @@ public final class StringUtil {
         return linesArray;
     }
 
-    // url param 파싱할 때 사
+    // url param 파싱할 때 사용
     // a=1&b=2&c=3이라는 문자열을 넣고 outerDelimiter에 &, innerDelimiter에 "="을 넣으면 {a:1,b:2,c:3}의 map이 나온다.
-    public static Map<String,String> parseStringToMap(String string, String outerDelimiter, String innerDelimiter){
+    public static Map<String,String> parseQueryString(String string){
         Map<String,String> map = new HashMap<>();
-        for(String param : string.split(outerDelimiter)){
-            String[] keyval = param.split(innerDelimiter);
+        for(String param : string.split("&")){
+            String[] keyval = param.split("=");
             map.put(keyval[0],keyval[1]);
         }
         return map;
     }
 
-    public static Map<String,String> parseQueryString(String queryString){
-        return parseStringToMap(queryString, "&", "=");
+    public static String getExtension(String fileName){
+        return fileName.substring(fileName.lastIndexOf("."));
     }
 }
