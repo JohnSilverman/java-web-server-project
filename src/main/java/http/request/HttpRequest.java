@@ -30,7 +30,7 @@ public interface HttpRequest {
     public static final String KEY_IP = "_IP";
     public static final String KEY_PORT = "_PORT";
 
-    public Map<String,String> getHeaderMap();
+    public String getHeader(String headerName);
     public METHOD getMethod();
     public String getPath();
     public Map<String,String> getParamMap();

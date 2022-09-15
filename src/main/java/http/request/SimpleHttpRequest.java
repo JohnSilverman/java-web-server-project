@@ -41,10 +41,7 @@ public class SimpleHttpRequest implements HttpRequest {
     }
 
     @Override
-    public Map<String, String> getHeaderMap() {
-        return headerMap;
-    }
-
+    public String getHeader(String key) {return this.headerMap.get(key); }
     @Override
     public METHOD getMethod() {
         return METHOD.findMethodByValue(headerMap.get(KEY_METHOD));

@@ -4,7 +4,7 @@ import java.io.*;
 import java.net.Socket;
 
 import http.MIME;
-import http.middlewares.RequestLogger;
+import http.middlewares.impls.RequestLogger;
 import http.request.HttpRequest;
 import http.request.SimpleHttpRequest;
 import http.response.HttpResponse;

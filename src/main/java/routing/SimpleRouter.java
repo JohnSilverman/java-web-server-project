@@ -2,6 +2,7 @@ package routing;
 
 import http.MIME;
 import http.middlewares.MiddleWare;
+import http.middlewares.MiddleWareStack;
 import http.request.HttpRequest;
 import http.response.SimpleHttpResponse;
 import http.response.HttpResponse;
@@ -20,12 +21,12 @@ public class SimpleRouter implements Router {
 
     private static final Logger logger = LoggerFactory.getLogger(SimpleRouter.class);
 
-    public Map<String, Controller> controllerMap = new HashMap<>();
-    public List<MiddleWare> middleWareList = new ArrayList<>();
+    private Map<String, Controller> controllerMap = new HashMap<>();
+    private MiddleWareStack middleWareStack = new MiddleWareStack();
 
     @Override
     public void addMiddleware(MiddleWare middleWare) {
-        middleWareList.add(middleWare);
+        middleWareStack.add(middleWare);
     }
 
     @Override
@@ -48,22 +49,8 @@ public class SimpleRouter implements Router {
             }
         }
 
-        request = processRequest(request);
-        return processResponse(controller == null ? response404(request) : controller.getResponse(request));
-    }
-
-    private HttpRequest processRequest(HttpRequest request){
-        for(MiddleWare mw : this.middleWareList){
-            request = mw.processRequest(request);
-        }
-        return request;
-    }
-
-    private HttpResponse processResponse(HttpResponse response){
-        for(int i = this.middleWareList.size() - 1; i >= 0; i--){
-            response = this.middleWareList.get(i).processResponse(response);
-        }
-        return response;
+        request = this.middleWareStack.processRequest(request);
+        return this.middleWareStack.processResponse(controller == null ? response404(request) : controller.getResponse(request));
     }
 
 

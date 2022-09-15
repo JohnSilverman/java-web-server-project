@@ -1,12 +1,12 @@
-package http.middlewares;
+package http.middlewares.impls;
 
+import http.middlewares.MiddleWare;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.RequestHandler;
 
-public class RequestLogger implements MiddleWare{
+public class RequestLogger implements MiddleWare {
     private static final Logger logger = LoggerFactory.getLogger(RequestLogger.class);
     private static RequestLogger instance = new RequestLogger();
 
