@@ -2,7 +2,7 @@ package http.response.responsebody;
 
 import http.MIME;
 import http.response.ResponseBody;
-import util.StringUtil;
+import util.HttpStringUtil;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -33,7 +33,7 @@ public class FileResponseBody implements ResponseBody {
 
     @Override
     public MIME getContentType() {
-        String ext = StringUtil.getExtension(this.file.getName());
+        String ext = HttpStringUtil.getExtension(this.file.getName());
         MIME mimeType = MIME.fromExtension(ext);
         return mimeType != null ? mimeType : MIME.HTML;
     }

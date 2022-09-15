@@ -29,6 +29,6 @@ public interface HttpRequest {
     public Map<String,String> getHeaderMap();
     public METHOD getMethod();
     public String getPath();
-    public Map<String,String> getParams();
+    public Map<String,String> getParamMap();
     public String getBody();
 }
