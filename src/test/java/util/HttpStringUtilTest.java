@@ -21,9 +21,11 @@ class HttpStringUtilTest {
 
     @Test
     void inputStreamToLines() {
-        String inputString = "abc\ndef\nghi\n\njklmnop";
+        String inputString = "abc\r\nContent-Length: 7\r\nghi\r\n\r\njklmnop";
         InputStream inputStream = new ByteArrayInputStream(inputString.getBytes());
         List<String> testResult = HttpStringUtil.inputStreamToLines(inputStream);
+
+        for(String str : testResult) System.out.println(str);
 
         assertEquals( 5,testResult.size());
         assertEquals( "abc",testResult.get(0));

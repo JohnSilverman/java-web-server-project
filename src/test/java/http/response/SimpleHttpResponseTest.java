@@ -21,7 +21,9 @@ class SimpleHttpResponseTest {
         assertEquals(
                 "HTTP/1.1 200 OK\r\n"
                 + "Content-Type: text/html;charset=utf-8\r\n"
-                + "Content-Length: 10\r\n\r\n"
+                + "Content-Length: 10\r\n"
+                + "Content-Type: text/plain\r\n"
+                +"\r\n"
                 + "HelloWorld"
                 , baos.toString()
         );

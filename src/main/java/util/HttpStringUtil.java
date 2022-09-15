@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.*;
@@ -17,16 +18,32 @@ public final class HttpStringUtil {
         List<String> linesArray = new ArrayList<>();
         String line;
 
+        int contentLength = 0;
+
         try {
-            line = reader.readLine();
-            while(!"".equals(line) && line!=null){
-                linesArray.add(line.trim());
+            while(true){
                 line = reader.readLine();
+                if(line == null || line.equals("")) { break;}
+                if(line.split(": ")[0].equals("Content-Length")) contentLength = Integer.parseInt(line.split(": ")[1]);
+                linesArray.add(line);
             }
         } catch (Exception e) {
             logger.error(e.getMessage());
             e.printStackTrace();
         }
+
+
+        linesArray.add("");
+
+        StringBuilder sb = new StringBuilder();
+        while(contentLength-- > 0) {
+            try {
+                sb.append((char)reader.read());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        linesArray.add(sb.toString());
 
         return linesArray;
     }

@@ -21,6 +21,7 @@ public class URLMatcher {
         while(rp >= 0 && str.charAt(rp) == '/') rp--;
         while(lp < str.length() && str.charAt(lp) == '/') lp++;
         if(lp > rp) return "/";
+        if(lp == 0) {str = "/" + str; rp++;}
         return str.substring(Math.max(0, lp-1), rp + 1);
     }
 

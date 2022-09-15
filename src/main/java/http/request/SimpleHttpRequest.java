@@ -41,7 +41,7 @@ public class SimpleHttpRequest implements HttpRequest {
     }
 
     @Override
-    public String getHeader(String key) {return this.headerMap.get(key); }
+    public String getHeader(String key) {return this.headerMap.getOrDefault(key,""); }
     @Override
     public METHOD getMethod() {
         return METHOD.findMethodByValue(headerMap.get(KEY_METHOD));
@@ -54,7 +54,7 @@ public class SimpleHttpRequest implements HttpRequest {
 
     @Override
     public String getParam(String key) {
-        return paramsMap.get(key);
+        return paramsMap.getOrDefault(key, "");
     }
 
     @Override
@@ -88,6 +88,7 @@ public class SimpleHttpRequest implements HttpRequest {
         String[] pathAndParams = methodParamsProtocol[1].split("\\?"); // split to path, params
 
         if(pathAndParams.length == 2){
+            System.out.println(pathAndParams[1]);
             paramsMap = HttpStringUtil.parseQueryString(pathAndParams[1]);
             for(String key : paramsMap.keySet()) result.put(key, paramsMap.get(key));
         }

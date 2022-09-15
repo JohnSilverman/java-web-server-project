@@ -1,11 +1,13 @@
 package http.middlewares.impls;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import http.MIME;
 import http.middlewares.MiddleWare;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
 import util.HttpStringUtil;
 
+import java.io.IOException;
 import java.util.Map;
 
 public class BodyParser implements MiddleWare {
@@ -19,12 +21,23 @@ public class BodyParser implements MiddleWare {
 
     @Override
     public HttpRequest processRequest(HttpRequest request) {
-        Map<String,String> map;
+        Map map;
+
+        if(request.getMethod().equals(HttpRequest.METHOD.GET) ||
+        request.getMethod().equals(HttpRequest.METHOD.DELETE)) {
+            System.out.println("yeah");
+            return request;
+        }
+
 
         if(request.getHeader("Content-Type").equals(MIME.FORM.getMime())){
             map = HttpStringUtil.parseQueryString(request.getBody());
         } else if(request.getHeader("Content-Type").equals(MIME.JSON.getMime())){
-            map = HttpStringUtil.parseQueryString(request.getBody());
+            try {
+                map = new ObjectMapper().readValue(request.getBody(), Map.class);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         } else return request; // json, form 아니면 그냥 통과
 
         request.put(KEY_BODY, map);
