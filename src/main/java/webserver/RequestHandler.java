@@ -3,12 +3,13 @@ package webserver;
 import java.io.*;
 import java.net.Socket;
 
+import http.MIME;
 import http.request.HttpRequest;
 import http.request.SimpleHttpRequest;
-import http.response.SimpleHttpResponse;
 import http.response.HttpResponse;
 import http.response.ResponseHeader;
-import http.response.responsebody.FileResponseBody;
+import http.response.SimpleHttpResponse;
+import http.response.responsebody.PlainTextResponseBody;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import routing.Router;
@@ -34,21 +35,18 @@ public class RequestHandler implements Runnable {
 
             Router router = new SimpleRouter();
 
+            // 컨트롤러 추가 (우선순위 순으로 추가하면 됨, 구체적인거 -> 일반적인거 순으로)
             router.addController("/", StaticFilesController.getInstance());
 
-            // 파일 준비
-            String path = requestData.getPath();
-            FileResponseBody fileResponseBody = new FileResponseBody("webapp/" + path);
-
-            // 응답 객체 만들기 (빌더 패턴 썼으면 더 좋았을까 하는 고민 살짝,,)
-            HttpResponse response = new SimpleHttpResponse()
-                    .status(200)
-                    .addHeader(new ResponseHeader("Content-Type", "text/html;charset=utf-8"))
-                    .body(fileResponseBody);
+            HttpResponse response;
+            try {
+                response = router.routeAndGetResponse(requestData);
+            } catch (Exception e){
+                response = response500(e);
+            }
 
             // 응답 전송
-            DataOutputStream dos = new DataOutputStream(out);
-            response.send(dos);
+            response.send(out);
 
         } catch (IOException e) {
             logger.info("run() error");
@@ -63,6 +61,14 @@ public class RequestHandler implements Runnable {
             logger.info("connection.close() error in run()");
             logger.error(ee.getMessage());
         }
+    }
+
+    private HttpResponse response500(Exception e){
+        HttpResponse response = new SimpleHttpResponse();
+        response.status(500)
+                .addHeader(new ResponseHeader("Content-Type", MIME.PLAIN_TEXT.toString()))
+                .body(new PlainTextResponseBody("500 Interval Server Error\n\n" + e.getMessage()));
+        return response;
     }
 
 }

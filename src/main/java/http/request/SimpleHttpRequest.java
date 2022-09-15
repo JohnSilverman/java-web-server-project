@@ -126,6 +126,7 @@ public class SimpleHttpRequest implements HttpRequest {
         try {
             List<String> requestHeaderList = HttpStringUtil.inputStreamToLines(inputStream);
             this.headerMap = parseHTTPRequest(requestHeaderList);
+            this.paramsMap = new HashMap<>();
         } catch (Exception e){
             logger.error(e.getMessage());
             e.printStackTrace();

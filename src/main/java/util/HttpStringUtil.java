@@ -43,7 +43,8 @@ public final class HttpStringUtil {
     }
 
     public static String getExtension(String fileName){
-        return fileName.substring(fileName.lastIndexOf("."));
+        int lastDot = fileName.lastIndexOf(".");
+        return lastDot != -1 ? fileName.substring(lastDot) : "";
     }
 
 
