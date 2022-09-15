@@ -3,19 +3,19 @@ package http.response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BaseHTTPResponse implements HttpResponse{
+public class SimpleHttpResponse implements HttpResponse{
     private static final Logger logger = LoggerFactory.getLogger(HttpResponse.class);
 
     private String statusLine = null;
     private List<ResponseHeader> headers;
     private ResponseBody body;
 
-    public BaseHTTPResponse() {
+    public SimpleHttpResponse() {
         this.statusLine = "";
         this.headers = new ArrayList<>();
     }
@@ -51,7 +51,7 @@ public class BaseHTTPResponse implements HttpResponse{
 
     @Override
     public HttpResponse status(int statusCode) {
-        this.statusLine = "HTTP/1.1 " + Status.of(statusCode).toString() + ";";
+        this.statusLine = "HTTP/1.1 " + Status.of(statusCode).toString();
         return this;
     }
 
@@ -65,6 +65,7 @@ public class BaseHTTPResponse implements HttpResponse{
     public HttpResponse body(ResponseBody body){
         this.body = body;
         this.addHeader( new ResponseHeader("Content-Length", String.valueOf(body.getContentLength())) );
+        this.addHeader( new ResponseHeader("Content-Type", body.getContentType().toString()));
         return this;
     }
 
@@ -77,11 +78,11 @@ public class BaseHTTPResponse implements HttpResponse{
     }
 
     @Override
-    public void send(DataOutputStream dos) {
+    public void send(OutputStream os) {
         try {
-            if( !this.statusLine.equals("") ){ dos.writeBytes(this.statusLine + "\r\n"); }
-            if( headers.size() != 0) { dos.writeBytes( headersToString(this.headers) + "\r\n\r\n"); }
-            if( this.body != null ) { this.body.getInputStream().transferTo(dos); }
+            if( !this.statusLine.equals("") ){ os.write((this.statusLine + "\r\n").getBytes()); }
+            if( headers.size() != 0) { os.write( (headersToString(this.headers) + "\r\n").getBytes() ); }
+            if( this.body.getInputStream() != null ) {this.body.getInputStream().transferTo(os); }
         } catch(IOException e){
             logger.error(e.getMessage());
             e.printStackTrace();
