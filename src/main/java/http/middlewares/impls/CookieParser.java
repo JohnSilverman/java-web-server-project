@@ -17,6 +17,8 @@ public class CookieParser implements MiddleWare {
 
     private CookieParser(){}
 
+    public static CookieParser getInstance() { return instance; }
+
     @Override
     public HttpRequest processRequest(HttpRequest request) {
         if(request.getHeader("Cookie") != null){

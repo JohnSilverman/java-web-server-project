@@ -4,6 +4,8 @@ import java.io.*;
 import java.net.Socket;
 
 import http.MIME;
+import http.middlewares.impls.BodyParser;
+import http.middlewares.impls.CookieParser;
 import http.middlewares.impls.RequestLogger;
 import http.request.HttpRequest;
 import http.request.SimpleHttpRequest;
@@ -39,6 +41,8 @@ public class RequestHandler implements Runnable {
 
             // 미들웨어 추가
             router.addMiddleware(RequestLogger.getInstance());
+            router.addMiddleware(CookieParser.getInstance());
+            router.addMiddleware(BodyParser.getInstance());
 
             // 컨트롤러 추가 (우선순위 순으로 추가하면 됨, 구체적인거 -> 일반적인거 순으로)
             router.addController("/{filePath}", StaticFilesController.getInstance());

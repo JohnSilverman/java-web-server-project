@@ -10,7 +10,9 @@ public enum MIME {
     JPEG(".jpeg","image/jpeg"),
     JPG(".jpg","image/jpg"),
     PNG(".png", "image/png"),
-    OCTET_STREAM("","application/octet-stream");
+    OCTET_STREAM("*","application/octet-stream"),
+    FORM("*", "application/x-www-form-urlencoded"),
+    XML(".xml","application/xml");
 
     private String extension;
     private String mimeType;
@@ -19,6 +21,9 @@ public enum MIME {
         this.extension = extension;
         this.mimeType = mimeType;
     }
+
+    public String getMime() { return mimeType; }
+    public String getExtension() { return extension; }
 
     public static MIME fromExtension(String extension){
         for(var mime: MIME.values()){
