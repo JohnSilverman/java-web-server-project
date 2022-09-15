@@ -1,13 +1,15 @@
-package http.response.textresponse;
+package http.response.responsebody;
+
+import http.MIME;
+import http.response.ResponseBody;
+import util.StringUtil;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
-public class FileResponseBody implements TextResponseBody{
+public class FileResponseBody implements ResponseBody {
 
     private File file;
 
@@ -16,11 +18,11 @@ public class FileResponseBody implements TextResponseBody{
     }
 
     @Override
-    public InputStream getInputStream() {
+    public InputStream getInputStream(){
         try {
             return new FileInputStream(this.file);
         } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
+            return null;
         }
     }
 
@@ -28,4 +30,12 @@ public class FileResponseBody implements TextResponseBody{
     public long getContentLength() {
         return this.file.length();
     }
+
+    @Override
+    public MIME getContentType() {
+        String ext = StringUtil.getExtension(this.file.getName());
+        MIME mimeType = MIME.fromExtension(ext);
+        return mimeType != null ? mimeType : MIME.HTML;
+    }
+
 }
