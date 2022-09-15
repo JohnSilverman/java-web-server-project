@@ -6,6 +6,6 @@ import http.response.HttpResponse;
 
 public interface Router {
     public void addMiddleware(MiddleWare middleWare);
-    public void addController(String path, Controller controller);
+    public void addController(Controller controller);
     public HttpResponse routeAndGetResponse(HttpRequest request);
 }

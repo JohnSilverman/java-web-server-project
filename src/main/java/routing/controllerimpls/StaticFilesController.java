@@ -9,23 +9,40 @@ import http.response.responsebody.FileResponseBody;
 import http.response.responsebody.PlainTextResponseBody;
 import routing.Controller;
 
+import java.io.File;
+import java.nio.file.Files;
 import java.util.Map;
 
 public class StaticFilesController implements Controller {
-    private static StaticFilesController instance = new StaticFilesController();
-    private StaticFilesController(){}
 
-    public static StaticFilesController getInstance(){
-        return instance;
+    private final String pathPattern;
+
+    public StaticFilesController(String pathPattern){
+        this.pathPattern = pathPattern;
     }
 
     @Override
     public HttpResponse getResponse(HttpRequest request) {
-        String filepath = request.getParam("filePath").equals("") ? "index.html" : request.getParam("filePath");
+        switch (request.getMethod()){
+            case POST:
+            case PUT:
+            case DELETE: return SimpleHttpResponse.simpleResponse(404);
+        }
+
+        String filepath = "webapp/" + (request.getParam("filePath").equals("") ? "index.html" : request.getParam("filePath"));
+
+        if(! new File(filepath).exists()){
+            return SimpleHttpResponse.simpleResponse(404);
+        }
 
         HttpResponse httpResponse = new SimpleHttpResponse();
         httpResponse.status(200)
-                .body(new FileResponseBody("webapp/" + filepath));
+                .body(new FileResponseBody(filepath));
         return httpResponse;
+    }
+
+    @Override
+    public String getPattern() {
+        return pathPattern;
     }
 }
