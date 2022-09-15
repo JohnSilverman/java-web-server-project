@@ -16,10 +16,26 @@ public final class HttpStringUtil {
     public static List<String> inputStreamToLines(InputStream in){
         BufferedReader reader = new BufferedReader(new InputStreamReader(in));
         List<String> linesArray = new ArrayList<>();
-        String line;
+        int contentLength = readHeaderAndGetContentLength(reader, linesArray);
+        readBodyIfExists(reader, linesArray, contentLength);
+        return linesArray;
+    }
 
+    private static void readBodyIfExists(BufferedReader reader, List<String> linesArray, int contentLength) {
+        StringBuilder sb = new StringBuilder();
+        while(contentLength-- > 0) {
+            try {
+                sb.append((char) reader.read());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        linesArray.add(sb.toString());
+    }
+
+    private static int readHeaderAndGetContentLength(BufferedReader reader, List<String> linesArray) {
         int contentLength = 0;
-
+        String line;
         try {
             while(true){
                 line = reader.readLine();
@@ -28,24 +44,10 @@ public final class HttpStringUtil {
                 linesArray.add(line);
             }
         } catch (Exception e) {
-            logger.error(e.getMessage());
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
-
-
         linesArray.add("");
-
-        StringBuilder sb = new StringBuilder();
-        while(contentLength-- > 0) {
-            try {
-                sb.append((char)reader.read());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        linesArray.add(sb.toString());
-
-        return linesArray;
+        return contentLength;
     }
 
     // url param 파싱할 때 사용
