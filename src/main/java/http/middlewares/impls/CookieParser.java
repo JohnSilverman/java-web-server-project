@@ -9,13 +9,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 
-public class SimpleeCookieParser implements MiddleWare {
+public class CookieParser implements MiddleWare {
 
     public static String KEY_COOKIE_MAP = "_COOKIE";
 
-    private static SimpleeCookieParser instance = new SimpleeCookieParser();
+    private static CookieParser instance = new CookieParser();
 
-    private SimpleeCookieParser(){}
+    private CookieParser(){}
 
     @Override
     public HttpRequest processRequest(HttpRequest request) {
