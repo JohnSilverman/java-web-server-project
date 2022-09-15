@@ -52,6 +52,13 @@ public class SimpleHttpRequest implements HttpRequest {
         return body;
     }
 
+    @Override
+    public void removePathPrefix(String pathPrefix){
+        if(headerMap.get(KEY_PATH).startsWith(pathPrefix)){
+            headerMap.put(KEY_PATH, headerMap.get(KEY_PATH).substring(pathPrefix.length()));
+        }
+    }
+
     //첫 줄 파싱. 예시 : "GET /user?q=john&religion=atheism HTTP/1.1"
     public Map<String,String> parseFirstLineOfHTTPRequest(String firstLine){
         Map<String,String> result = new HashMap<>();

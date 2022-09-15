@@ -1,4 +1,4 @@
-package controller;
+package routing;
 
 import http.request.HttpRequest;
 import http.response.SimpleHttpResponse;
@@ -28,6 +28,7 @@ public class SimpleRouter implements Router {
             pathVars = HttpStringUtil.matchPath(request.getPath(), pathPrefix);
             if(pathVars != null) {
                 controller = this.controllerMap.get(pathPrefix);
+                request.removePathPrefix(pathPrefix);
                 request.getParamMap().putAll(pathVars);
                 break;
             }

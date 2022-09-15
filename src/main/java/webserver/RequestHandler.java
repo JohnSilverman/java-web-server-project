@@ -11,6 +11,9 @@ import http.response.ResponseHeader;
 import http.response.responsebody.FileResponseBody;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import routing.Router;
+import routing.SimpleRouter;
+import routing.controllerimpls.StaticFilesController;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -28,6 +31,10 @@ public class RequestHandler implements Runnable {
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             // 요청 패킷 파싱
             HttpRequest requestData = new SimpleHttpRequest(in);
+
+            Router router = new SimpleRouter();
+
+            router.addController("/", StaticFilesController.getInstance());
 
             // 파일 준비
             String path = requestData.getPath();
