@@ -36,7 +36,10 @@ public class SimpleHttpRequest implements HttpRequest {
     }
 
     @Override
-    public String getHeader(String key) {return this.headerMap.getOrDefault(key,""); }
+    public String getHeader(String key) {
+        return this.headerMap.getOrDefault(key,"");
+    }
+
     @Override
     public METHOD getMethod() {
         return METHOD.findMethodByValue(headerMap.get(KEY_METHOD));
@@ -69,14 +72,6 @@ public class SimpleHttpRequest implements HttpRequest {
         return this.additionalData.get(key);
     }
 
-//    @Override
-//    public void removePathPrefix(String pathPrefix){
-//        if(headerMap.get(KEY_PATH).startsWith(pathPrefix)){
-//            headerMap.put(KEY_PATH, headerMap.get(KEY_PATH).substring(pathPrefix.length()));
-//        }
-//    }
-
-    //첫 줄 파싱. 예시 : "GET /user?q=john&religion=atheism HTTP/1.1"
     public Map<String,String> parseFirstLineOfHTTPRequest(String firstLine){
         Map<String,String> result = new HashMap<>();
         String[] methodParamsProtocol = firstLine.split(" "); // split to method, path+params, protocol

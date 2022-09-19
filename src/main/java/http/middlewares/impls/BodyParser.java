@@ -33,7 +33,9 @@ public class BodyParser implements MiddleWare {
             map = HttpStringUtil.parseQueryString(request.getBody());
         } else if(request.getHeader("Content-Type").equals(MIME.JSON.getMime())){
             map = JsonConverter.jsonStringToMap(request.getBody());
-        } else return request; // json, form 아니면 그냥 통과
+        } else {
+            return request; // json, form 아니면 그냥 통과
+        }
 
         request.put(KEY_BODY, map);
         return request;
