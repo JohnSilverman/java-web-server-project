@@ -1,6 +1,5 @@
 package http.middlewares.impls;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import http.MIME;
 import http.middlewares.MiddleWare;
 import http.request.HttpRequest;
@@ -8,7 +7,6 @@ import http.response.HttpResponse;
 import util.HttpStringUtil;
 import util.JsonConverter;
 
-import java.io.IOException;
 import java.util.Map;
 
 public class BodyParser implements MiddleWare {
@@ -37,7 +35,7 @@ public class BodyParser implements MiddleWare {
             return request; // json, form 아니면 그냥 통과
         }
 
-        request.put(KEY_BODY, map);
+        request.putAdditionalData(KEY_BODY, map);
         return request;
     }
 

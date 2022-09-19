@@ -63,12 +63,12 @@ public class SimpleHttpRequest implements HttpRequest {
         return body;
     }
     @Override
-    public void put(String key, Object data) {
+    public void putAdditionalData(String key, Object data) {
         this.additionalData.put(key, data);
     }
 
     @Override
-    public Object get(String key) {
+    public Object getAdditionalData(String key) {
         return this.additionalData.get(key);
     }
 

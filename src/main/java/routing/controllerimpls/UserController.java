@@ -1,17 +1,19 @@
 package routing.controllerimpls;
 
 import db.Database;
-import http.middlewares.impls.BodyParser;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
 import http.response.SimpleHttpResponse;
-import model.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import routing.Controller;
+import service.UserService;
 
-import javax.xml.crypto.Data;
-import java.util.Map;
+import static http.request.HttpRequest.METHOD.POST;
 
 public class UserController implements Controller {
+
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     private final String pathPattern;
 
@@ -22,15 +24,13 @@ public class UserController implements Controller {
     @Override
     public HttpResponse getResponse(HttpRequest request) {
         HttpResponse response;
-        switch (request.getMethod()){
-            case POST:
-                response = postUser(request);
-                break;
-            case GET:
-            case DELETE:
-            case PUT:
-            default : response = SimpleHttpResponse.simpleResponse(405);
+
+        if(request.getMethod() == POST){
+            response = postUser(request);
+        } else {
+            response = SimpleHttpResponse.simpleResponse(405);
         }
+
         return response;
     }
 
@@ -40,16 +40,12 @@ public class UserController implements Controller {
     }
 
     private HttpResponse postUser(HttpRequest request){
-        // POST BODY
-        Map<String,String> requestBody = (Map<String, String>) request.get(BodyParser.KEY_BODY);
-        String userId = requestBody.get("userId");
-        String password = requestBody.get("password");
-        String name = requestBody.get("name");
-        String email = requestBody.get("email");
-
-        User user = new User(userId, password, name, email);
-        Database.addUser(user);
-
+        try {
+            UserService.postUser(request, Database.class);
+        } catch (Exception e) {
+            logger.error(e.toString());
+        }
         return SimpleHttpResponse.redirect("/");
     }
+
 }

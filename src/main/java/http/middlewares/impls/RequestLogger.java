@@ -16,7 +16,7 @@ public class RequestLogger implements MiddleWare {
 
     @Override
     public HttpRequest processRequest(HttpRequest request) {
-        logger.info("{} {} {} {}", request.getMethod(), request.getPath(), request.get(HttpRequest.KEY_IP), request.get(HttpRequest.KEY_PORT));
+        logger.info("{} {} {} {}", request.getMethod(), request.getPath(), request.getAdditionalData(HttpRequest.KEY_IP), request.getAdditionalData(HttpRequest.KEY_PORT));
         return request;
     }
 

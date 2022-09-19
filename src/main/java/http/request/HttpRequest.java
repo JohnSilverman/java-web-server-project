@@ -1,6 +1,5 @@
 package http.request;
 
-import java.util.List;
 import java.util.Map;
 
 public interface HttpRequest {
@@ -38,7 +37,7 @@ public interface HttpRequest {
     public String getBody();
 
     // 요청객체가 컨트롤러에 도착하기 전에 중간에 있는 미들웨어들이 여기다 추가적인 정보 기록 ( ex : requested user login info )
-    public void put(String key, Object data);
-    public Object get(String key);
+    public void putAdditionalData(String key, Object data);
+    public Object getAdditionalData(String key);
 
 }

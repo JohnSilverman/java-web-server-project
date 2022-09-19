@@ -3,20 +3,18 @@ package webserver;
 import java.io.*;
 import java.net.Socket;
 
-import http.MIME;
 import http.middlewares.impls.BodyParser;
-import http.middlewares.impls.CookieParser;
+import http.middlewares.impls.CookieManager;
 import http.middlewares.impls.RequestLogger;
 import http.request.HttpRequest;
 import http.request.SimpleHttpRequest;
 import http.response.HttpResponse;
-import http.response.ResponseHeader;
 import http.response.SimpleHttpResponse;
-import http.response.responsebody.PlainTextResponseBody;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import routing.Router;
 import routing.SimpleRouter;
+import routing.controllerimpls.AuthController;
 import routing.controllerimpls.StaticFilesController;
 import routing.controllerimpls.UserController;
 
@@ -35,18 +33,19 @@ public class RequestHandler implements Runnable {
             HttpRequest requestData = new SimpleHttpRequest(in);
 
             // IP, PORT 정보 넘겨주기
-            requestData.put(HttpRequest.KEY_IP, connection.getInetAddress());
-            requestData.put(HttpRequest.KEY_PORT, connection.getPort());
+            requestData.putAdditionalData(HttpRequest.KEY_IP, connection.getInetAddress());
+            requestData.putAdditionalData(HttpRequest.KEY_PORT, connection.getPort());
 
             Router router = new SimpleRouter();
 
             // 미들웨어 추가
             router.addMiddleware(RequestLogger.getInstance());
-            router.addMiddleware(CookieParser.getInstance());
+            router.addMiddleware(CookieManager.getInstance());
             router.addMiddleware(BodyParser.getInstance());
 
             // 컨트롤러 추가 (우선순위 순으로 추가하면 됨, 구체적인거 -> 일반적인거 순으로)
             router.addController(new UserController("/api/user"));
+            router.addController(new AuthController("/api/auth/{loginOrLogout}"));
             router.addController(new StaticFilesController("/{filePath}"));
 
             // 응답 생성
