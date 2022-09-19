@@ -29,15 +29,10 @@ public class SimpleHttpRequest implements HttpRequest {
     } //테스트 전용
 
     public SimpleHttpRequest(InputStream inputStream){
-        try {
-            List<String> requestHeaderList = HttpStringUtil.inputStreamToLines(inputStream);
-            this.headerMap = parseHTTPRequest(requestHeaderList);
-            this.paramsMap = new HashMap<>();
-            this.additionalData = new HashMap<>();
-        } catch (Exception e){
-            logger.error(e.getMessage());
-            e.printStackTrace();
-        }
+        List<String> requestHeaderList = HttpStringUtil.inputStreamToLines(inputStream);
+        this.headerMap = parseHTTPRequest(requestHeaderList);
+        this.paramsMap = new HashMap<>();
+        this.additionalData = new HashMap<>();
     }
 
     @Override
@@ -88,7 +83,6 @@ public class SimpleHttpRequest implements HttpRequest {
         String[] pathAndParams = methodParamsProtocol[1].split("\\?"); // split to path, params
 
         if(pathAndParams.length == 2){
-            System.out.println(pathAndParams[1]);
             paramsMap = HttpStringUtil.parseQueryString(pathAndParams[1]);
             for(String key : paramsMap.keySet()) result.put(key, paramsMap.get(key));
         }

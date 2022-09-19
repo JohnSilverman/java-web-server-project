@@ -1,7 +1,6 @@
 package http.response;
 
 import http.MIME;
-import http.request.HttpRequest;
 import http.response.responsebody.PlainTextResponseBody;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,36 +27,6 @@ public class SimpleHttpResponse implements HttpResponse{
         this.body = null;
     }
 
-    private enum Status {
-        OK(200,"OK"),
-        FOUND(302,"302 Found"),
-        BAD_REQUEST(400,"Bad Request"),
-        UNAUTHORIZED(401, "Unauthorized"),
-        FORBIDDEN(403,"Forbidden"),
-        NOT_FOUND(404,"Not Found"),
-        METHOD_NOT_ALLOWED(405, "Method Not Allowed"),
-        INTERNAL_SERVER_ERROR(500,"Internal Server Error");
-
-        private final int statusCode;
-        private final String message;
-
-        Status(int statusCode, String message){
-            this.statusCode = statusCode;
-            this.message = message;
-        }
-
-        public static Status of(int statusCode){
-            for(var status : Status.values()){
-                if(status.statusCode == statusCode) return status;
-            }
-            return null;
-        }
-
-        public String getMessage() { return this.message;}
-        public int getStatusCode() {return this.statusCode;}
-        public String toString(){ return String.valueOf(this.statusCode) + " " + this.message;}
-    }
-
     public static HttpResponse simpleResponse(int statusCode){
         HttpResponse response = new SimpleHttpResponse();
         response.status(statusCode)
@@ -69,8 +38,7 @@ public class SimpleHttpResponse implements HttpResponse{
     public static HttpResponse redirect(String location){
         HttpResponse response = new SimpleHttpResponse();
         response.status(302)
-                .addHeader(new ResponseHeader("Location", location))
-                .body(new PlainTextResponseBody(Status.of(302).getMessage()));
+                .addHeader(new ResponseHeader("Location", location));
         return response;
     }
 

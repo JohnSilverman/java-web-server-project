@@ -33,20 +33,34 @@ public final class HttpStringUtil {
         linesArray.add(sb.toString());
     }
 
+    // TODO : 분리하기
     private static int readHeaderAndGetContentLength(BufferedReader reader, List<String> linesArray) {
-        int contentLength = 0;
+        readHeader(reader, linesArray);
+        return getContentLength(linesArray);
+    }
+
+    private static void readHeader(BufferedReader reader, List<String> linesArray){
         String line;
         try {
             while(true){
                 line = reader.readLine();
                 if(line == null || line.equals("")) { break;}
-                if(line.split(": ")[0].equals("Content-Length")) contentLength = Integer.parseInt(line.split(": ")[1]);
                 linesArray.add(line);
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
         linesArray.add("");
+    }
+
+    private static int getContentLength(List<String> header){
+        int contentLength = 0;
+        for(String line: header){
+            if(line.split(": ")[0].equals("Content-Length")) {
+                contentLength = Integer.parseInt(line.split(": ")[1]);
+                break;
+            }
+        }
         return contentLength;
     }
 

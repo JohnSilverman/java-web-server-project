@@ -13,6 +13,8 @@ import java.io.File;
 import java.nio.file.Files;
 import java.util.Map;
 
+import static http.request.HttpRequest.METHOD.GET;
+
 public class StaticFilesController implements Controller {
 
     private final String pathPattern;
@@ -23,15 +25,13 @@ public class StaticFilesController implements Controller {
 
     @Override
     public HttpResponse getResponse(HttpRequest request) {
-        switch (request.getMethod()){
-            case POST:
-            case PUT:
-            case DELETE: return SimpleHttpResponse.simpleResponse(404);
+        if (request.getMethod() != GET){
+            return SimpleHttpResponse.simpleResponse(404);
         }
 
         String filepath = "webapp/" + (request.getParam("filePath").equals("") ? "index.html" : request.getParam("filePath"));
 
-        if(! new File(filepath).exists()){
+        if(new File(filepath).exists() == false){
             return SimpleHttpResponse.simpleResponse(404);
         }
 

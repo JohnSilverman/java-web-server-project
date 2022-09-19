@@ -37,6 +37,7 @@ public class SimpleRouter implements Router {
         Controller controller = null;
         Map<String,String> pathVars = null;
 
+        // TODO : Stream API
         for(Controller con : this.controllerList){
             String pathPattern = con.getPattern();
             pathVars = URLMatcher.matchPath(request.getPath(), pathPattern);

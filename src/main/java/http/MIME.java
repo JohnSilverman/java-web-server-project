@@ -29,14 +29,14 @@ public enum MIME {
         for(var mime: MIME.values()){
             if(mime.extension.equals(extension)) return mime;
         }
-        return null;
+        return OCTET_STREAM;
     }
 
     public static MIME fromMime(String mimeType){
         for(var mime: MIME.values()){
             if(mime.mimeType.equals(mimeType)) return mime;
         }
-        return null;
+        return OCTET_STREAM;
     }
 
     @Override

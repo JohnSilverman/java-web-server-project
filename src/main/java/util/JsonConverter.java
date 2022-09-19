@@ -11,7 +11,7 @@ public class JsonConverter {
     public static String mapToJsonString(Map<String,String> map){
         ObjectMapper mapper = new ObjectMapper();
         try {
-            return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(map);
+            return mapper.writeValueAsString(map);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
