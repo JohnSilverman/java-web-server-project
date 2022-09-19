@@ -16,6 +16,8 @@ public class JsonResponseBody implements ResponseBody {
         jsonString = JsonConverter.mapToJsonString(map);
     }
 
+    public JsonResponseBody(String jsonString) { this.jsonString = jsonString; }
+
     @Override
     public InputStream getInputStream() {
         return new ByteArrayInputStream(this.jsonString.getBytes());

@@ -87,4 +87,13 @@ public class URLMatcherTest {
         Map<String,String> pathVariables = URLMatcher.matchPath(requestPath, pathPrefix);
         assertNotNull(pathVariables);
     }
+
+    @Test
+    @DisplayName("/api/user/list 와 /api/user 는 당연히 매치 실패해야됨")
+    void matchPathFailureTest(){
+        String requestPath = "/api/user";
+        String pathPrefix = "/api/user/list";
+        Map<String,String> pathVariables = URLMatcher.matchPath(requestPath, pathPrefix);
+        assertNull(pathVariables);
+    }
 }

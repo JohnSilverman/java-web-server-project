@@ -14,9 +14,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import routing.Router;
 import routing.SimpleRouter;
-import routing.controllerimpls.AuthController;
-import routing.controllerimpls.StaticFilesController;
-import routing.controllerimpls.UserController;
+import routing.controllerimpls.Authentication;
+import routing.controllerimpls.StaticFilesServer;
+import routing.controllerimpls.ListAllUsers;
+import routing.controllerimpls.UserSignup;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -44,9 +45,10 @@ public class RequestHandler implements Runnable {
             router.addMiddleware(BodyParser.getInstance());
 
             // 컨트롤러 추가 (우선순위 순으로 추가하면 됨, 구체적인거 -> 일반적인거 순으로)
-            router.addController(new UserController("/api/user"));
-            router.addController(new AuthController("/api/auth/{loginOrLogout}"));
-            router.addController(new StaticFilesController("/{filePath}"));
+            router.addController(new ListAllUsers());
+            router.addController(new UserSignup());
+            router.addController(new Authentication());
+            router.addController(new StaticFilesServer());
 
             // 응답 생성
             HttpResponse response;

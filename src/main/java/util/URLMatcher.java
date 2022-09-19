@@ -53,6 +53,6 @@ public class URLMatcher {
             p2++;
         }
 
-        return result;
+        return p1 != reqLen || p2 != patLen ? null : result;
     }
 }

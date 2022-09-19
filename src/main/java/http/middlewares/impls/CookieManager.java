@@ -22,8 +22,9 @@ public class CookieManager implements MiddleWare {
         if(request.getHeader("Cookie") != null){
             Map<String,String> cookieMap = new HashMap<>();
             for(String line : Arrays.asList(request.getHeader("Cookie").split(";"))){
-                String name = line.split("=")[0];
-                String value = line.length() == 2 ? line.split("=")[1] : "";
+                String[] splitted = line.split("=");
+                String name = splitted[0].trim();
+                String value = splitted.length == 2 ? splitted[1].trim() : "";
                 cookieMap.put(name,value);
             }
             request.putAdditionalData(KEY_COOKIE_MAP, cookieMap);

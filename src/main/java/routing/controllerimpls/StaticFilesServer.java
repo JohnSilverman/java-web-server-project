@@ -10,12 +10,11 @@ import java.io.File;
 
 import static http.request.HttpRequest.METHOD.GET;
 
-public class StaticFilesController implements Controller {
+public class StaticFilesServer implements Controller {
 
-    private final String pathPattern;
-
-    public StaticFilesController(String pathPattern){
-        this.pathPattern = pathPattern;
+    @Override
+    public String getPattern() {
+        return "/{filePath}";
     }
 
     @Override
@@ -36,8 +35,4 @@ public class StaticFilesController implements Controller {
         return httpResponse;
     }
 
-    @Override
-    public String getPattern() {
-        return pathPattern;
-    }
 }

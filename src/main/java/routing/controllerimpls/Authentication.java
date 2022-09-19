@@ -14,14 +14,13 @@ import service.UserService;
 import static http.request.HttpRequest.METHOD.GET;
 import static http.request.HttpRequest.METHOD.POST;
 
-public class AuthController implements Controller {
+public class Authentication implements Controller {
 
-    private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
+    private static final Logger logger = LoggerFactory.getLogger(Authentication.class);
 
-    private final String pathPattern;
-
-    public AuthController(String pathPattern){
-        this.pathPattern = pathPattern;
+    @Override
+    public String getPattern() {
+        return "/api/auth/{loginOrLogout}";
     }
 
     @Override
@@ -39,11 +38,6 @@ public class AuthController implements Controller {
         }
 
         return response;
-    }
-
-    @Override
-    public String getPattern() {
-        return this.pathPattern;
     }
 
     private HttpResponse login(HttpRequest request){

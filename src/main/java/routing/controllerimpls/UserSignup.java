@@ -11,14 +11,13 @@ import service.UserService;
 
 import static http.request.HttpRequest.METHOD.POST;
 
-public class UserController implements Controller {
+public class UserSignup implements Controller {
 
-    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserSignup.class);
 
-    private final String pathPattern;
-
-    public UserController(String pathPattern){
-        this.pathPattern = pathPattern;
+    @Override
+    public String getPattern() {
+        return "/api/user";
     }
 
     @Override
@@ -32,11 +31,6 @@ public class UserController implements Controller {
         }
 
         return response;
-    }
-
-    @Override
-    public String getPattern() {
-        return this.pathPattern;
     }
 
     private HttpResponse postUser(HttpRequest request){
