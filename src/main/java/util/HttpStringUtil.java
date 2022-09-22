@@ -33,7 +33,6 @@ public final class HttpStringUtil {
         linesArray.add(sb.toString());
     }
 
-    // TODO : 분리하기
     private static int readHeaderAndGetContentLength(BufferedReader reader, List<String> linesArray) {
         readHeader(reader, linesArray);
         return getContentLength(linesArray);

@@ -25,8 +25,6 @@ class HttpStringUtilTest {
         InputStream inputStream = new ByteArrayInputStream(inputString.getBytes());
         List<String> testResult = HttpStringUtil.inputStreamToLines(inputStream);
 
-        for(String str : testResult) System.out.println(str);
-
         assertEquals( 5,testResult.size());
         assertEquals( "abc",testResult.get(0));
         assertEquals("",testResult.get(3));
