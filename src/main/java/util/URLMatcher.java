@@ -5,15 +5,16 @@ import java.util.*;
 public class URLMatcher {
 
     // /user/1 <-> /user/{id} 매치해서 {id:1} 해시맵 반환
-    public static Map<String,String> matchPath(String requestPath, String pattern){
-        List<String> requestPathList = emptyOrDefault(Arrays.asList(regularize(requestPath).split("/")));
-        List<String> patternList = emptyOrDefault(Arrays.asList(regularize(pattern).split("/")));
-
-        return matchPathAlgorithmPart(requestPathList, patternList);
+    public static Map<String,String> matchURLAndExtractVariables(String requestPath, String pattern){
+        return matchPathAlgorithmPart(listFromPathString(requestPath), listFromPathString(pattern));
     }
 
     private static List<String> emptyOrDefault(List<String> pathList){
         return pathList.size() == 0 ? new ArrayList<>(Arrays.asList("","")) : pathList;
+    }
+
+    public static List<String> listFromPathString(String path){
+        return emptyOrDefault(Arrays.asList(regularize(path).split("/")));
     }
 
     private static String regularize(String str){
@@ -54,5 +55,10 @@ public class URLMatcher {
         }
 
         return p1 != reqLen || p2 != patLen ? null : result;
+    }
+
+    public static boolean isMatched(String requestPath, String pattern){
+        Map<String, String> map = matchPathAlgorithmPart(listFromPathString(requestPath), listFromPathString(pattern));
+        return map != null;
     }
 }

@@ -1,6 +1,5 @@
 package routing.controllerimpls;
 
-import com.google.gson.Gson;
 import db.Database;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
@@ -11,11 +10,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import routing.Controller;
 import service.UserService;
+import util.JsonConverter;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class ListAllUsers implements Controller {
 
@@ -58,7 +56,7 @@ public class ListAllUsers implements Controller {
             }
 
             //construct response object
-            String jsonString = new Gson().toJson(pwRemovedList);
+            String jsonString = JsonConverter.stringify(pwRemovedList);
             response = new SimpleHttpResponse().status(200)
                     .body(new JsonResponseBody(jsonString));
 

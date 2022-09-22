@@ -13,7 +13,7 @@ public class URLMatcherTest {
     void matchPathSuccessTest() {
         String requestPath = "/user/123";
         String pathPrefix = "/user/{id}";
-        Map<String,String> pathVariables = URLMatcher.matchPath(requestPath, pathPrefix);
+        Map<String,String> pathVariables = URLMatcher.matchURLAndExtractVariables(requestPath, pathPrefix);
         assertNotNull(pathVariables);
         assertEquals("123", pathVariables.get("id"));
     }
@@ -23,7 +23,7 @@ public class URLMatcherTest {
     void matchPathNotMatchTest() {
         String requestPath = "/users/123";
         String pathPrefix = "/user/{id}";
-        Map<String,String> pathVariables = URLMatcher.matchPath(requestPath, pathPrefix);
+        Map<String,String> pathVariables = URLMatcher.matchURLAndExtractVariables(requestPath, pathPrefix);
         assertNull(pathVariables);
     }
 
@@ -32,7 +32,7 @@ public class URLMatcherTest {
     void matchPathStaticFileServingTest() {
         String requestPath = "/dir1/dir2/dir3/file.extension";
         String pathPrefix = "/{filePath}";
-        Map<String,String> pathVariables = URLMatcher.matchPath(requestPath, pathPrefix);
+        Map<String,String> pathVariables = URLMatcher.matchURLAndExtractVariables(requestPath, pathPrefix);
         assertNotNull(pathVariables);
         assertEquals("dir1/dir2/dir3/file.extension", pathVariables.get("filePath"));
     }
@@ -42,7 +42,7 @@ public class URLMatcherTest {
     void matchPathHomepageTest() {
         String requestPath = "/";
         String pathPrefix = "/{filePath}";
-        Map<String,String> pathVariables = URLMatcher.matchPath(requestPath, pathPrefix);
+        Map<String,String> pathVariables = URLMatcher.matchURLAndExtractVariables(requestPath, pathPrefix);
         assertNotNull(pathVariables);
         assertEquals("", pathVariables.get("filePath"));
     }
@@ -52,7 +52,7 @@ public class URLMatcherTest {
     void matchPathMultipleVariables() {
         String requestPath = "/user/5/age/young";
         String pathPrefix = "/user/{id}/age/{age}";
-        Map<String,String> pathVariables = URLMatcher.matchPath(requestPath, pathPrefix);
+        Map<String,String> pathVariables = URLMatcher.matchURLAndExtractVariables(requestPath, pathPrefix);
         assertNotNull(pathVariables);
         assertEquals("5", pathVariables.get("id"));
         assertEquals("young", pathVariables.get("age"));
@@ -63,7 +63,7 @@ public class URLMatcherTest {
     void matchPathComplexSlash() {
         String requestPath = "/user/5/age/young/comments";
         String pathPrefix = "/user/{info}";
-        Map<String,String> pathVariables = URLMatcher.matchPath(requestPath, pathPrefix);
+        Map<String,String> pathVariables = URLMatcher.matchURLAndExtractVariables(requestPath, pathPrefix);
         assertNotNull(pathVariables);
         assertEquals("5/age/young/comments", pathVariables.get("info"));
     }
@@ -73,7 +73,7 @@ public class URLMatcherTest {
     void matchPathAmbiguity() {
         String requestPath = "/user/5/age/young/22/comments";
         String pathPrefix = "/user/{age}/{info}";
-        Map<String,String> pathVariables = URLMatcher.matchPath(requestPath, pathPrefix);
+        Map<String,String> pathVariables = URLMatcher.matchURLAndExtractVariables(requestPath, pathPrefix);
         assertNotNull(pathVariables);
         assertEquals("5", pathVariables.get("age"));
         assertEquals("age/young/22/comments", pathVariables.get("info"));
@@ -84,7 +84,7 @@ public class URLMatcherTest {
     void matchPathRegularizationTest(){
         String requestPath = "/user/";
         String pathPrefix = "user";
-        Map<String,String> pathVariables = URLMatcher.matchPath(requestPath, pathPrefix);
+        Map<String,String> pathVariables = URLMatcher.matchURLAndExtractVariables(requestPath, pathPrefix);
         assertNotNull(pathVariables);
     }
 
@@ -93,7 +93,7 @@ public class URLMatcherTest {
     void matchPathFailureTest(){
         String requestPath = "/api/user";
         String pathPrefix = "/api/user/list";
-        Map<String,String> pathVariables = URLMatcher.matchPath(requestPath, pathPrefix);
+        Map<String,String> pathVariables = URLMatcher.matchURLAndExtractVariables(requestPath, pathPrefix);
         assertNull(pathVariables);
     }
 }

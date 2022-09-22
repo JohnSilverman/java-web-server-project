@@ -13,7 +13,7 @@ public class JsonResponseBody implements ResponseBody {
     private final String jsonString;
 
     public JsonResponseBody(Map<String,String> map){
-        jsonString = JsonConverter.mapToJsonString(map);
+        jsonString = JsonConverter.stringify(map);
     }
 
     public JsonResponseBody(String jsonString) { this.jsonString = jsonString; }

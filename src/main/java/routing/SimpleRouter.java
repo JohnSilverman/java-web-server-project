@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import util.URLMatcher;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -39,8 +38,8 @@ public class SimpleRouter implements Router {
 
         // TODO : Stream API
         for(Controller con : this.controllerList){
-            String pathPattern = con.getPattern();
-            pathVars = URLMatcher.matchPath(request.getPath(), pathPattern);
+            pathVars = URLMatcher.matchURLAndExtractVariables(request.getPath(), con.getPattern());
+
             if(pathVars != null) {
                 controller = con;
                 request.getParamMap().putAll(pathVars);
