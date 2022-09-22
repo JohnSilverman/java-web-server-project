@@ -7,6 +7,7 @@ import http.response.HttpResponse;
 import util.HttpStringUtil;
 import util.JsonConverter;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class BodyParser implements MiddleWare {
@@ -20,10 +21,11 @@ public class BodyParser implements MiddleWare {
 
     @Override
     public HttpRequest processRequest(HttpRequest request) {
-        Map map;
+        Map<String,String> map = new HashMap<>();
 
         if(request.getMethod().equals(HttpRequest.METHOD.GET) ||
-        request.getMethod().equals(HttpRequest.METHOD.DELETE)) {
+            request.getMethod().equals(HttpRequest.METHOD.DELETE)) {
+            request.putAdditionalData(KEY_BODY, new HashMap<String,String>());
             return request;
         }
 
@@ -31,8 +33,6 @@ public class BodyParser implements MiddleWare {
             map = HttpStringUtil.parseQueryString(request.getBody());
         } else if(request.getHeader("Content-Type").equals(MIME.JSON.getMime())){
             map = JsonConverter.jsonStringToMap(request.getBody());
-        } else {
-            return request; // json, form 아니면 그냥 통과
         }
 
         request.putAdditionalData(KEY_BODY, map);
