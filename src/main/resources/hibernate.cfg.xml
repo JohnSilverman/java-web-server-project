@@ -21,6 +21,7 @@
 
 
         <mapping class="model.Member"/>
+        <mapping class="model.Memo"/>
 
     </session-factory>
 </hibernate-configuration>

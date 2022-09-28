@@ -8,10 +8,11 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
 import model.LoginToken;
 import model.Member;
+import model.Memo;
 import model.User;
 import org.hibernate.Session;
+import org.hibernate.query.Query;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +28,7 @@ public class Database {
 
     public static void addUser(User user) {
         //users.put(user.getUserId(), user);
-        addMember(Member.fromUser(user));
+        persist(Member.fromUser(user));
     }
 
     public static LoginToken setLoginToken(User user){
@@ -56,7 +57,7 @@ public class Database {
 
     // Member
 
-    public static void addMember(Member member) {
+    public static void persist(Object member) {
         PostgreSQL pg = PostgreSQL.getInstance();
         Session session = pg.getSession();
         session.beginTransaction();
@@ -90,6 +91,18 @@ public class Database {
         cq.where(cb.equal(model.get("id"), memberId));
         TypedQuery<Member> q = session.createQuery(cq);
         return q.getSingleResult();
+    }
+
+    public static List<Memo> findAllMemos(){
+        Session session = PostgreSQL.getInstance().getSession();
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+        CriteriaQuery<Memo> cq = cb.createQuery(Memo.class);
+        Root<Memo> root = cq.from(Memo.class);
+        cq.select(root);
+
+        Query<Memo> q = session.createQuery(cq);
+        List<Memo> results = q.getResultList();
+        return results;
     }
 
 }
