@@ -3,21 +3,17 @@ package model;
 import util.Security;
 
 public class LoginToken {
-    private String id;
-    private User user;
-    private boolean notNull = false;
-
-    public LoginToken(){}
-
-    public LoginToken(User user){
-        this.user = user;
+    private String id = null;
+    public LoginToken(){
         this.id = Security.genRandomId();
-        this.notNull = true;
     }
 
-    public boolean isNotNull(){ return this.notNull; }
+    public LoginToken(String token){
+        this.id = token;
+    }
+
+    public boolean isNotNull(){ return this.id != null; }
 
     public String getToken() { return this.id; }
 
-    public User getUser() { return this.user; }
 }

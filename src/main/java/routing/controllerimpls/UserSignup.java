@@ -35,7 +35,7 @@ public class UserSignup implements Controller {
 
     private HttpResponse postUser(HttpRequest request){
         try {
-            UserService.postUser(request, Database.class);
+            UserService.postUser(request);
         } catch (Exception e) {
             logger.error(e.toString());
         }

@@ -47,7 +47,7 @@ public class ListAllUsers implements Controller {
             }
 
             //get data
-            List<User> userList = UserService.queryUserList(Database.class);
+            List<User> userList = UserService.queryUserList();
             List<User> pwRemovedList = new ArrayList<>();
 
             for(User u : userList){

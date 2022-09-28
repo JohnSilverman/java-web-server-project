@@ -43,7 +43,7 @@ public class Authentication implements Controller {
     private HttpResponse login(HttpRequest request){
         LoginToken token;
         try {
-            token = UserService.login(request, Database.class);
+            token = UserService.login(request);
         } catch (Exception e) {
             logger.error(e.toString());
             return SimpleHttpResponse.simpleResponse(500);

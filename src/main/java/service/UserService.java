@@ -25,7 +25,7 @@ public class UserService {
 
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
-    public static User postUser(HttpRequest request, Class database) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    public static User postUser(HttpRequest request) {
         //get body
         Map<String,String> requestBody = (Map<String, String>) request.getAdditionalData(BodyParser.KEY_BODY);
         String userId = requestBody.get("userId");
@@ -33,36 +33,25 @@ public class UserService {
         String name = requestBody.get("name");
         String email = requestBody.get("email");
 
-        //extract method
-        Method addUser = database.getMethod("addUser", User.class);
-
         //post
         String hashedPw = Security.encrypt(password);
         User user = new User(userId, hashedPw, name, email);
-        addUser.invoke(null, user);
+        Database.addUser(user);
 
         return user;
     }
 
-    public static LoginToken login(HttpRequest request, Class database) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    public static LoginToken login(HttpRequest request) {
         Map<String,String> requestBody = (Map<String, String>) request.getAdditionalData(BodyParser.KEY_BODY);
         String userId = requestBody.get("userId");
         String password = requestBody.get("password");
-
-        //extract method
-        Method findUserById = database.getMethod("findUserById", String.class);
-        Method setLoginToken = database.getMethod("setLoginToken", User.class);
-
         //check password
         String hashed = Security.encrypt(password);
-        User user = (User)findUserById.invoke(null, userId);
-        LoginToken token;
+        User user = Database.findUserById(userId);
+        LoginToken token = new LoginToken();
         if (user.getPassword().equals(hashed)){
-            token = (LoginToken)setLoginToken.invoke(null, user);
-        } else {
-            token = new LoginToken();
+            token = Database.setLoginToken(user);
         }
-
         return token;
     }
 
@@ -78,9 +67,8 @@ public class UserService {
         return response;
     }
 
-    public static List<User> queryUserList(Class database) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Method findAll = database.getMethod("findAll");
-        return new ArrayList<>(((Collection<User>) findAll.invoke(null)));
+    public static List queryUserList() {
+        return new ArrayList<>(Database.findAll());
     }
 
     public static User getUserIfLogined(HttpRequest request){

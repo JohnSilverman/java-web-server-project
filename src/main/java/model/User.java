@@ -1,5 +1,8 @@
 package model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+
 public class User {
     private String userId;
     private String password;
@@ -32,5 +35,9 @@ public class User {
     @Override
     public String toString() {
         return "User [userId=" + userId + ", password=" + password + ", name=" + name + ", email=" + email + "]";
+    }
+
+    public static User fromMember(Member mem){
+        return new User(mem.getUserId(), mem.getPassword(), mem.getName(), mem.getEmail());
     }
 }
